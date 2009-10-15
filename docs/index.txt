@@ -19,7 +19,7 @@ Basic Options
 	``month`` is 0-based, meaning January=0, February=1, etc.
 	If ommitted, the calendar starts on the current date.
 
-**header**: Object/``false``, *Default*: ``{ left:'title', center:'', right:'prev,next' }``
+**header**: Object/``false``, *Default*: ``{ left:'title', center:'', right:'today prev,next' }``
 	Defines the buttons/text at the top of the calendar.
 	``false`` will display no header.
 	An object can be supplied with properties ``left``, ``center``, and ``right``.
@@ -34,6 +34,9 @@ Basic Options
 		
 		``next``
 			button for moving the calendar forward one month/week/day
+			
+		``today``
+			button for moving the calendar to the current month/week/day
 			
 		*a blank space*
 			visual gap between buttons/text
