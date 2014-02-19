@@ -1,7 +1,82 @@
-var CalendarController = (function () {
-    return {
-	    test: function () {console.log(123)},
-	    select: function (start, end, allDay) {
+(function ($, undefined) {
+    $.CalendarController = function (options) {
+
+
+        // method calling
+        if (typeof options == 'string') {
+            var args = Array.prototype.slice.call(arguments, 1);
+            var res;
+
+            this.each(function () {
+                var calendar = $.data(this, 'fullCalendar');
+
+                console.log(this);
+                console.log(calendar);
+                if (calendar && $.isFunction(calendar[options])) {
+                    var r = calendar[options].apply(calendar, args);
+                    if (res === undefined) {
+                        res = r;
+                    }
+                    if (options == 'destroy') {
+                        $.removeData(this, 'fullCalendar');
+                    }
+                }
+            });
+            if (res !== undefined) {
+                return res;
+            }
+            return this;
+        }
+
+        options = options || {};
+
+        // would like to have this logic in EventManager, but needs to happen before options are recursively extended
+        var eventSources = options.eventSources || [];;
+        delete options.eventSources;
+        if (options.events) {
+            eventSources.push(options.events);
+            delete options.events;
+        }
+
+
+        options = $.extend(true, {},
+            defaults, (options.isRTL || options.isRTL === undefined && defaults.isRTL) ? rtlDefaults : {},
+            options
+        );
+
+
+        this.each(function (i, _element) {
+            var element = $(_element);
+            var calendar = new Calendar(element, options, eventSources);
+            element.data('fullCalendar', calendar); // TODO: look into memory leak implications
+            calendar.render();
+        });
+
+
+        return this;
+
+    };
+
+    function initCalendar(options) {
+        caller = '#' + options.caller;
+
+        //currentStartDate = options.start;
+
+        //calendar = $(caller).fullCalendar({
+        //theme: true,
+        //defaultView: options.displayMode == 'week' ? 'basicWeek' : 'month',
+        //header: {
+        //left: 'prev,next',
+        //center: 'title',
+        //right: 'month,basicWeek'
+        //},
+        //selectable: true,
+        //disableDragging: true,
+        //weekMode: 'liquid',
+        //}
+    }
+
+    function select(start, end, allDay) {
         currentCalendar = options.caller;
         currentDate = new Date(start);
         currentEndDate = end;
@@ -71,44 +146,5 @@ var CalendarController = (function () {
             alert('Date selected out of range!');
 
         }
-    },
-    initCalendar: function (options) {
-        caller = '#' + options.caller;
-        modelDay = options.modelDay;
-
-
-        if (typeof options.holidays != 'undefined')
-            holidays = options.holidays;
-        else
-            holidays = [];
-
-        displayFormatElement = options.displayFormatElement;
-
-        if (typeof options.dayDataSource != 'undefined') {
-
-            loadDayData(options.dayDataSource);
-
-        } else {
-
-            initializeDayData(new Date(options.start.getTime()), new Date(options.end.getTime()));
-
-        }
-
-
-        currentStartDate = options.start;
-
-        //calendar = $(caller).fullCalendar({
-                //theme: true,
-                //defaultView: options.displayMode == 'week' ? 'basicWeek' : 'month',
-                //header: {
-                    //left: 'prev,next',
-                    //center: 'title',
-                    //right: 'month,basicWeek'
-                //},
-                //selectable: true,
-                //disableDragging: true,
-                //weekMode: 'liquid',
-            //}
-        }
     }
-    })();
+})(jQuery);

@@ -1,6 +1,3 @@
-                 dayRender: ,
-                 viewDisplay: function (view) {
-                 },
 function CalendarView() {
 }
  
