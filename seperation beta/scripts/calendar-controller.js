@@ -30,7 +30,6 @@
 
         options = options || {};
 
-        // would like to have this logic in EventManager, but needs to happen before options are recursively extended
         var eventSources = options.eventSources || [];;
         delete options.eventSources;
         if (options.events) {
@@ -57,23 +56,25 @@
 
     };
 
-    function initCalendar(options) {
-        caller = '#' + options.caller;
-
+    function initCalendar(caller, viewArgs, modelArgs) {
+        caller = '#' + caller;
+var view = new CalendarView(viewArgs);
+var model = new CalendarModel(modelArgs);
         //currentStartDate = options.start;
 
-        //calendar = $(caller).fullCalendar({
-        //theme: true,
-        //defaultView: options.displayMode == 'week' ? 'basicWeek' : 'month',
-        //header: {
-        //left: 'prev,next',
-        //center: 'title',
-        //right: 'month,basicWeek'
-        //},
-        //selectable: true,
-        //disableDragging: true,
-        //weekMode: 'liquid',
-        //}
+calendar = $(caller).fullCalendar({
+                 theme: view.useTheme,
+                 defaultView: view.displayMode,
+                 year: model.year,
+                 month: model.month,
+                 date: model.date,
+                 viewDisplay: view.viewDisplay,
+                 header: view.header,
+                 selectable: view.isReadOnly,
+                 select: ,
+                 weekMode: view.weekMode,
+                 dayRender: view.dayRender
+             });
     }
 
     function select(start, end, allDay) {

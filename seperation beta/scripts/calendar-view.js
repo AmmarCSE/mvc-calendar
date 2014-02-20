@@ -1,4 +1,16 @@
 function CalendarView() {
+	var args = arguments[0];
+
+        this.isReadOnly = args.isReadOnly || true;
+        this.displayMode = args.displayMode || 'month';
+	this.useTheme = args.useTheme || false;
+	this.weekMode = args.weekMode || 'liquid';
+	this.header = args.header || {
+                     left: 'prev,next',
+                     center: 'title',
+                     right: 'month,basicWeek'
+                 };
+                 
 }
  
 CalendarView.prototype.dayRender = function (daysOfWeek, cell) {

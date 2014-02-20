@@ -147,7 +147,6 @@ TASCalendar = function () {
                      right: 'month,basicWeek'
                  },
                  selectable: true,
-                 disableDragging: true,
                  select: function (start, end, allDay) {
                      currentCalendar = options.caller;
                      currentDate = new Date(start);
