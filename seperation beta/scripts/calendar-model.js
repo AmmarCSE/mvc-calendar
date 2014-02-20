@@ -138,8 +138,7 @@ CalendarModel.prototype.retrieveData = function () {
              }
 
              return allotmentPricings;
-         }
-};
+         };
 
 function dateDiffInDays(start, end) {
     return Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1;

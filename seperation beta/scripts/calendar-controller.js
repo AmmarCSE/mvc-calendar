@@ -1,17 +1,16 @@
 (function ($, undefined) {
     $.CalendarController = function (options) {
 
-
         // method calling
         if (typeof options == 'string') {
             var args = Array.prototype.slice.call(arguments, 1);
             var res;
 
+console.log(this);
+console.log(window['initCalendar']);
             this.each(function () {
                 var calendar = $.data(this, 'fullCalendar');
 
-                console.log(this);
-                console.log(calendar);
                 if (calendar && $.isFunction(calendar[options])) {
                     var r = calendar[options].apply(calendar, args);
                     if (res === undefined) {
@@ -28,35 +27,14 @@
             return this;
         }
 
-        options = options || {};
-
-        var eventSources = options.eventSources || [];;
-        delete options.eventSources;
-        if (options.events) {
-            eventSources.push(options.events);
-            delete options.events;
-        }
-
-
-        options = $.extend(true, {},
-            defaults, (options.isRTL || options.isRTL === undefined && defaults.isRTL) ? rtlDefaults : {},
-            options
-        );
-
-
-        this.each(function (i, _element) {
-            var element = $(_element);
-            var calendar = new Calendar(element, options, eventSources);
-            element.data('fullCalendar', calendar); // TODO: look into memory leak implications
-            calendar.render();
-        });
 
 
         return this;
 
     };
 
-    function initCalendar(caller, viewArgs, modelArgs) {
+    function initCalendar(caller, modelArgs, viewArgs) {
+	    console.log('chitchat');
         caller = '#' + caller;
 var view = new CalendarView(viewArgs);
 var model = new CalendarModel(modelArgs);
@@ -71,7 +49,7 @@ calendar = $(caller).fullCalendar({
                  viewDisplay: view.viewDisplay,
                  header: view.header,
                  selectable: view.isReadOnly,
-                 select: ,
+                 select:function(){} ,
                  weekMode: view.weekMode,
                  dayRender: view.dayRender
              });

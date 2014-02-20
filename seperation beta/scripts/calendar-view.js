@@ -58,9 +58,7 @@ CalendarView.prototype.dayRender = function (daysOfWeek, cell) {
                          $(caller + ' ' + 'td[data-date="' + formattedDate + '"]')
                              .append(element);
                      }
-                 }
-             });
-         };
+                 };
 
 CalendarView.prototype.viewDisplay = function(view) {
                      var start = options.start;
