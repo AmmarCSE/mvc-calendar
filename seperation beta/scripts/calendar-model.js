@@ -2,22 +2,21 @@ function CalendarModel () {
 	var args = arguments[0];
 
         this.modelDay = args.modelDay;
-        this.year = args.year;
-        this.month = args.month;
-        this.date = args.date;
+	this.start = args.start;
+	this.end = args.end;
 
         this.weekendDays = args.weekendDays || [];
 	this.holidays = args.holidays || [];
 
-        if (typeof options.dayDataSource != 'undefined') {
-
-            loadDayData(options.dayDataSource);
-
-        } else {
-
-            initializeDayData(new Date(options.start.getTime()), new Date(options.end.getTime()));
-
-        }
+        ////if (typeof options.dayDataSource != 'undefined') {
+//
+            //loadDayData(options.dayDataSource);
+//
+        //} else {
+//
+            //initializeDayData(new Date(options.start.getTime()), new Date(options.end.getTime()));
+//
+        //}
 
 }
  

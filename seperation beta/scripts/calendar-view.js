@@ -1,11 +1,11 @@
-function CalendarView() {
-	var args = arguments[0];
-
-        this.isReadOnly = args.isReadOnly || true;
-        this.displayMode = args.displayMode || 'month';
-	this.useTheme = args.useTheme || false;
-	this.weekMode = args.weekMode || 'liquid';
-	this.header = args.header || {
+function CalendarView(model) {
+	var viewSettings = arguments[1];
+	this.model = model;
+        this.isReadOnly = viewSettings.isReadOnly || true;
+        this.displayMode = viewSettings.displayMode || 'month';
+	this.useTheme = viewSettings.useTheme || false;
+	this.weekMode = viewSettings.weekMode || 'liquid';
+	this.header = viewSettings.header || {
                      left: 'prev,next',
                      center: 'title',
                      right: 'month,basicWeek'
@@ -17,8 +17,7 @@ CalendarView.prototype.dayRender = function (daysOfWeek, cell) {
                      currentDate = daysOfWeek;
                      var dayNumber = "<div class='fc-day-number'>" + currentDate.getDate() + "</div>";
                      var formattedDate = $.fullCalendar.formatDate(currentDate, "yyyy-MM-dd");
-
-                     if (currentDate.getTime() >= options.start.getTime() && currentDate.getTime() <= options.end.getTime()) {
+                     if (currentDate.getTime() >= this.model.start.getTime() && currentDate.getTime() <= this.model.end.getTime()) {
                          $(caller + ' ' + 'td[data-date="' + formattedDate + '"]')
                              .append(dayNumber);
 
@@ -35,7 +34,7 @@ CalendarView.prototype.dayRender = function (daysOfWeek, cell) {
                                  .removeClass('fc-state-highlight-weekend');
 
                          }
-                         var isHoliday = jQuery.inArray(daysOfWeek.getTime(), options.holidays) != -1;
+                         var isHoliday = jQuery.inArray(daysOfWeek.getTime(), this.model.holidays) != -1;
 
                          if (isHoliday) {
 
@@ -61,8 +60,8 @@ CalendarView.prototype.dayRender = function (daysOfWeek, cell) {
                  };
 
 CalendarView.prototype.viewDisplay = function(view) {
-                     var start = options.start;
-                     var end = options.end;
+                     var start = this.model.start;
+                     var end = this.model.end;
 
                      $(caller + ' .fc-button-prev').removeClass("fc-state-disabled");
                      $(caller + ' .fc-button-next').removeClass("fc-state-disabled");

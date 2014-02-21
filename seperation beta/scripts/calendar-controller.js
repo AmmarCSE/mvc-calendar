@@ -4,22 +4,19 @@
     $.ControllerRouter = function (request) {
 
 	if(typeof request == 'string') {
+		var res;
             var args = Array.prototype.slice.call(arguments, 1);
-            this.each(function () {
                 if ($.isFunction(controller[request])) {
-                    var r = controller[request].apply(controller);
-                    if (options == 'destroy') {
+                    var r = controller[request].apply(controller, args);
+                    if (request == 'destroy') {
                         $.removeData(this, 'fullCalendar');
                     }
                 }
-            });
             if (res !== undefined) {
                 return res;
             }
             return this;
         }
-
-
 
         return this;
 
@@ -28,24 +25,21 @@
     function Controller() {
         var that = this;
 
-
-        // exports
         that.initCalendar = initCalendar;
         that.select = select;
 
         function initCalendar(caller, modelArgs, viewArgs) {
-            console.log('chitchat');
             caller = '#' + caller;
-            var view = new CalendarView(viewArgs);
             var model = new CalendarModel(modelArgs);
+            var view = new CalendarView(model, viewArgs);
             //currentStartDate = options.start;
 
             calendar = $(caller).fullCalendar({
                 theme: view.useTheme,
                 defaultView: view.displayMode,
-                year: model.year,
-                month: model.month,
-                date: model.date,
+                year: model.start.getFullYear(),
+                month: model.start.getMonth(),
+                date: model.start.getDate(),
                 viewDisplay: view.viewDisplay,
                 header: view.header,
                 selectable: view.isReadOnly,
