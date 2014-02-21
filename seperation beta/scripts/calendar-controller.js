@@ -1,21 +1,13 @@
 (function ($, undefined) {
-    $.CalendarController = function (options) {
+    var controller = new Controller();
 
-        // method calling
-        if (typeof options == 'string') {
+    $.ControllerRouter = function (request) {
+
+	if(typeof request == 'string') {
             var args = Array.prototype.slice.call(arguments, 1);
-            var res;
-
-console.log(this);
-console.log(window['initCalendar']);
             this.each(function () {
-                var calendar = $.data(this, 'fullCalendar');
-
-                if (calendar && $.isFunction(calendar[options])) {
-                    var r = calendar[options].apply(calendar, args);
-                    if (res === undefined) {
-                        res = r;
-                    }
+                if ($.isFunction(controller[request])) {
+                    var r = controller[request].apply(controller);
                     if (options == 'destroy') {
                         $.removeData(this, 'fullCalendar');
                     }
@@ -33,97 +25,106 @@ console.log(window['initCalendar']);
 
     };
 
-    function initCalendar(caller, modelArgs, viewArgs) {
-	    console.log('chitchat');
-        caller = '#' + caller;
-var view = new CalendarView(viewArgs);
-var model = new CalendarModel(modelArgs);
-        //currentStartDate = options.start;
+    function Controller() {
+        var that = this;
 
-calendar = $(caller).fullCalendar({
-                 theme: view.useTheme,
-                 defaultView: view.displayMode,
-                 year: model.year,
-                 month: model.month,
-                 date: model.date,
-                 viewDisplay: view.viewDisplay,
-                 header: view.header,
-                 selectable: view.isReadOnly,
-                 select:function(){} ,
-                 weekMode: view.weekMode,
-                 dayRender: view.dayRender
-             });
-    }
 
-    function select(start, end, allDay) {
-        currentCalendar = options.caller;
-        currentDate = new Date(start);
-        currentEndDate = end;
+        // exports
+        that.initCalendar = initCalendar;
+        that.select = select;
 
-        if (currentDate.getTime() >= options.start && currentDate.getTime() <= options.end.getTime() && currentEndDate.getTime() <= options.end.getTime()) {
+        function initCalendar(caller, modelArgs, viewArgs) {
+            console.log('chitchat');
+            caller = '#' + caller;
+            var view = new CalendarView(viewArgs);
+            var model = new CalendarModel(modelArgs);
+            //currentStartDate = options.start;
 
-            var isWeekEnd;
+            calendar = $(caller).fullCalendar({
+                theme: view.useTheme,
+                defaultView: view.displayMode,
+                year: model.year,
+                month: model.month,
+                date: model.date,
+                viewDisplay: view.viewDisplay,
+                header: view.header,
+                selectable: view.isReadOnly,
+                select: function () {},
+                weekMode: view.weekMode,
+                dayRender: view.dayRender
+            });
+        }
 
-            while (currentDate.getTime() <= currentEndDate.getTime()) {
+        function select(start, end, allDay) {
+            currentCalendar = options.caller;
+            currentDate = new Date(start);
+            currentEndDate = end;
 
-                if (typeof modelDayData[currentDate] == 'undefined') {
+            if (currentDate.getTime() >= options.start && currentDate.getTime() <= options.end.getTime() && currentEndDate.getTime() <= options.end.getTime()) {
 
-                    isWeekEnd = jQuery.inArray(currentDate.getDay(), weekendDays) != -1;
-                    modelDayData[currentDate] = {};
-                    modelDayData[currentDate].DateEpoch = currentDate;
-                    modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
-                    $.each(modelDay, weekEndWalker);
+                var isWeekEnd;
+
+                while (currentDate.getTime() <= currentEndDate.getTime()) {
+
+                    if (typeof modelDayData[currentDate] == 'undefined') {
+
+                        isWeekEnd = jQuery.inArray(currentDate.getDay(), weekendDays) != -1;
+                        modelDayData[currentDate] = {};
+                        modelDayData[currentDate].DateEpoch = currentDate;
+                        modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
+                        $.each(modelDay, weekEndWalker);
+
+                    }
+                    var newDate = currentDate.setDate(currentDate.getDate() + 1);
+                    currentDate = new Date(newDate);
 
                 }
-                var newDate = currentDate.setDate(currentDate.getDate() + 1);
-                currentDate = new Date(newDate);
 
-            }
+                currentDate = new Date(start);;
 
-            currentDate = new Date(start);;
+                var formattedDate = $.fullCalendar.formatDate(currentDate, "Day Pricing: MMM dd");
+                var isWeekEnd = modelDayData[currentDate].IsWeekEndDay;
 
-            var formattedDate = $.fullCalendar.formatDate(currentDate, "Day Pricing: MMM dd");
-            var isWeekEnd = modelDayData[currentDate].IsWeekEndDay;
+                $('#roomQuantitySpinner').val(modelDay.NumberOfRooms);
+                $('#freeRoomQuantitySpinner').val(modelDay.NumberOfFreeRooms);
+                $('#costSpinner').val(modelDay.RoomCost.notWeekEnd);
 
-            $('#roomQuantitySpinner').val(modelDay.NumberOfRooms);
-            $('#freeRoomQuantitySpinner').val(modelDay.NumberOfFreeRooms);
-            $('#costSpinner').val(modelDay.RoomCost.notWeekEnd);
+                if (isWeekEnd) {
 
-            if (isWeekEnd) {
+                    $('#costSpinner').val(modelDay.RoomCost.isWeekEnd);
 
-                $('#costSpinner').val(modelDay.RoomCost.isWeekEnd);
+                }
 
-            }
+                if (start.getTime() == end.getTime()) {
 
-            if (start.getTime() == end.getTime()) {
+                    $('#roomQuantitySpinner').val(modelDayData[currentDate].NumberOfRooms);
+                    $('#freeRoomQuantitySpinner').val(modelDayData[currentDate].NumberOfFreeRooms);
+                    $('#costSpinner').val(modelDayData[currentDate].RoomCost);
 
-                $('#roomQuantitySpinner').val(modelDayData[currentDate].NumberOfRooms);
-                $('#freeRoomQuantitySpinner').val(modelDayData[currentDate].NumberOfFreeRooms);
-                $('#costSpinner').val(modelDayData[currentDate].RoomCost);
+                } else {
+
+                    formattedDate += $.fullCalendar.formatDate(end, " - dd");
+
+                }
+
+                $("#isWeekEnd").prop("checked", false);
+
+                if (isWeekEnd) {
+
+                    $("#isWeekEnd").prop("checked", true);
+
+                }
+
+                $('#calendarDialog').dialog("option", "title", formattedDate);
+                $("#calendarDialog").dialog("open");
+
+                calendar.fullCalendar('unselect');
 
             } else {
 
-                formattedDate += $.fullCalendar.formatDate(end, " - dd");
+                alert('Date selected out of range!');
 
             }
-
-            $("#isWeekEnd").prop("checked", false);
-
-            if (isWeekEnd) {
-
-                $("#isWeekEnd").prop("checked", true);
-
-            }
-
-            $('#calendarDialog').dialog("option", "title", formattedDate);
-            $("#calendarDialog").dialog("open");
-
-            calendar.fullCalendar('unselect');
-
-        } else {
-
-            alert('Date selected out of range!');
-
         }
     }
 })(jQuery);
