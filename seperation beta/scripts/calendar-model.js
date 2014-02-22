@@ -8,15 +8,27 @@ function CalendarModel () {
         this.weekendDays = args.weekendDays || [];
 	this.holidays = args.holidays || [];
 
-        ////if (typeof options.dayDataSource != 'undefined') {
-//
-            //loadDayData(options.dayDataSource);
-//
-        //} else {
-//
-            //initializeDayData(new Date(options.start.getTime()), new Date(options.end.getTime()));
-//
-        //}
+	this.modelDayData = {};
+
+	this.weekEndWalker = function (key, value) {
+		 this.modelDayData[currentDate][key] = value;
+
+		 if (value !== null && typeof value === "object")
+		     if (this.modelDayData[currentDate].IsWeekEndDay)
+			 this.modelDayData[currentDate][key] = this.modelDay[key].isWeekEnd;
+		     else
+			 this.modelDayData[currentDate][key] = this.modelDay[key].notWeekEnd;
+	};
+
+        if (typeof args.dayDataSource != 'undefined') {
+
+            loadDayData(args.dayDataSource);
+
+        } else {
+
+            this.initializeDayData(new Date(this.start.getTime()), new Date(this.end.getTime()));
+
+        }
 
 }
  
@@ -25,12 +37,11 @@ CalendarModel.prototype.initializeDayData = function(start, end) {
          var isWeekEnd;
 
          while (currentDate <= end) {
-
              isWeekEnd = jQuery.inArray(currentDate.getDay(), weekendDays) != -1;
-             modelDayData[currentDate] = {};
-             modelDayData[currentDate].DateEpoch = currentDate.getFullYear() + ',' + (currentDate.getMonth() + 1) + ',' + currentDate.getDate();
-             modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
-             $.each(modelDay, weekEndWalker);
+             this.modelDayData[currentDate] = {};
+             this.modelDayData[currentDate].DateEpoch = currentDate.getFullYear() + ',' + (currentDate.getMonth() + 1) + ',' + currentDate.getDate();
+             this.modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
+             $.each(this.modelDay, this.weekEndWalker.bind(this));
 
              var newDate = currentDate.setDate(currentDate.getDate() + 1);
              currentDate = new Date(newDate);
@@ -42,9 +53,9 @@ CalendarModel.prototype.loadDayData = function(data) {
 
              currentDate = new Date(data[i].DateEpoch);
 
-             modelDayData[currentDate] = {};
-             modelDayData[currentDate].DateEpoch = data[i].DateEpoch;
-             modelDayData[currentDate].IsWeekEndDay = data[i].IsWeekEndDay;
+             this.modelDayData[currentDate] = {};
+             this.modelDayData[currentDate].DateEpoch = data[i].DateEpoch;
+             this.modelDayData[currentDate].IsWeekEndDay = data[i].IsWeekEndDay;
 
              delete data[i].DateEpoch;
              delete data[i].IsWeekEndDay;
@@ -53,20 +64,11 @@ CalendarModel.prototype.loadDayData = function(data) {
          }
 };
 
-CalendarModel.prototype.weekEndWalker = function (key, value) {
-         modelDayData[currentDate][key] = value;
-
-         if (value !== null && typeof value === "object")
-             if (modelDayData[currentDate].IsWeekEndDay)
-                 modelDayData[currentDate][key] = modelDay[key].isWeekEnd;
-             else
-                 modelDayData[currentDate][key] = modelDay[key].notWeekEnd;
-};
 
 CalendarModel.prototype.updateDayWalker = function (key, value) {
          if (key !== 'weekend') {
 
-             modelDayData[currentDate][key] = $("[data-dayModelKey='" + key + "']").val() === undefined ?
+             this.modelDayData[currentDate][key] = $("[data-dayModelKey='" + key + "']").val() === undefined ?
 
              value : $("[data-dayModelKey='" + key + "']").val();
 
@@ -90,7 +92,7 @@ CalendarModel.prototype.updateDayData = function () {
                  var freeRooms = $('#freeRoomQuantitySpinner').val();
                  var pricing = $('#costSpinner').val();
 
-                 $.each(modelDayData[currentDate], updateDayWalker);
+                 $.each(this.modelDayData[currentDate], updateDayWalker);
 
                  var isWeekEnd = false;
 
@@ -107,7 +109,7 @@ CalendarModel.prototype.updateDayData = function () {
                      cell.addClass('fc-state-highlight-holiday');
 
 
-                 modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
+                 this.modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
 
                  var element = '<div class="fc-event">' +
                      'Rooms: ' + numRooms + '<br/>' +
@@ -125,14 +127,14 @@ CalendarModel.prototype.updateDayData = function () {
 CalendarModel.prototype.retrieveData = function () {
              var allotmentPricings = [];
 
-             for (var dayItem in modelDayData) {
+             for (var dayItem in this.modelDayData) {
 
-                 var currentDayItemDate = new Date(modelDayData[dayItem].DateEpoch);
+                 var currentDayItemDate = new Date(this.modelDayData[dayItem].DateEpoch);
 
-                 modelDayData[dayItem].DateEpoch = currentDayItemDate.getFullYear() + ',' +
+                 this.modelDayData[dayItem].DateEpoch = currentDayItemDate.getFullYear() + ',' +
                      (currentDayItemDate.getMonth() + 1) + ',' +
                      currentDayItemDate.getDate();
-                 allotmentPricings.push(modelDayData[dayItem]);
+                 allotmentPricings.push(this.modelDayData[dayItem]);
 
              }
 

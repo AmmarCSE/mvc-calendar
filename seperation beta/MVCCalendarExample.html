@@ -23,13 +23,13 @@
             }
         };
         var weekendDays = [4, 5, 6];
-        var calendar1, calendar2;
+        var calendar, calendar2;
         $(document).ready(function () {
-			$.ControllerRouter('initCalendar', 'calendar1', 
+			$.ControllerRouter('initCalendar', 
 				{modelDay :modelDayAllotment,
 start: new Date(2013,11,3), end: new Date(2013,11,9)},
-			       	{});
-            $('#calendar1').css({
+			       	{container: 'calendar'});
+            $('#calendar').css({
                 "display": "none"
             });
         });
@@ -44,7 +44,7 @@ start: new Date(2013,11,3), end: new Date(2013,11,9)},
         td {
             height: 100px;
         }
-        #calendar1 {
+        #calendar {
             width: 600px;
             margin: 0 auto;
             margin-top: 40px;
@@ -64,9 +64,9 @@ start: new Date(2013,11,3), end: new Date(2013,11,9)},
 </head>
 
 <body>
-    <input type="image" id="calendarIcon" src="images/calendar_icon.jpg" onclick="$('#calendar1').show('slow');" />
+    <input type="image" id="calendarIcon" src="images/calendar_icon.jpg" onclick="$('#calendar').show('slow');" />
     <br/>
-    <div id='calendar1'></div>
+    <div id='calendar'></div>
     <br/>
     <div id="calendarDialog">
         <label for="roomQuantitySpinner">Room Quantity:</label>

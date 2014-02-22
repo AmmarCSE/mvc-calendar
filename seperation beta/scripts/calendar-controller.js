@@ -28,8 +28,8 @@
         that.initCalendar = initCalendar;
         that.select = select;
 
-        function initCalendar(caller, modelArgs, viewArgs) {
-            caller = '#' + caller;
+        function initCalendar(modelArgs, viewArgs) {
+            caller = viewArgs.container = '#' + viewArgs.container;
             var model = new CalendarModel(modelArgs);
             var view = new CalendarView(model, viewArgs);
             //currentStartDate = options.start;
@@ -40,12 +40,12 @@
                 year: model.start.getFullYear(),
                 month: model.start.getMonth(),
                 date: model.start.getDate(),
-                viewDisplay: view.viewDisplay,
+                viewDisplay: view.ViewDisplay.bind(view),
                 header: view.header,
                 selectable: view.isReadOnly,
                 select: function () {},
                 weekMode: view.weekMode,
-                dayRender: view.dayRender
+                dayRender: view.DayRender.bind(view)
             });
         }
 
