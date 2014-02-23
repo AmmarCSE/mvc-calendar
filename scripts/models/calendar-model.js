@@ -2,6 +2,8 @@ function CalendarModel () {
 	var args = arguments[0];
 
         this.modelDay = args.modelDay;
+	this.initializeToDefault = args.weekendDays || false; 
+
 	this.start = args.start;
 	this.end = args.end;
 
@@ -24,15 +26,15 @@ function CalendarModel () {
 
             loadDayData(args.dayDataSource);
 
-        } else {
+        } else if(this.initializeToDefault){
 
-            this.initializeDayData(new Date(this.start.getTime()), new Date(this.end.getTime()));
+            this.initializeDefaultDayData(new Date(this.start.getTime()), new Date(this.end.getTime()));
 
         }
 
 }
  
-CalendarModel.prototype.initializeDayData = function(start, end) {
+CalendarModel.prototype.initializeDefaultDayData = function(start, end) {
          currentDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
          var isWeekEnd;
 

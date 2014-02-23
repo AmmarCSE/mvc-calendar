@@ -1,4 +1,13 @@
-
+function DialogView(model) {
+	this.dialog = $('<div></div>');
+}
+function BuildDialogInnards(dialog) {
+for (var key in p) {
+  if (p.hasOwnProperty(key)) {
+    alert(key + " -> " + p[key]);
+  }
+}
+}
         $(document).ready(function () {
             $("#calendarDialog").dialog({
                 autoOpen: false,

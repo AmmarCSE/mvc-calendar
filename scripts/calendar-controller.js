@@ -23,10 +23,8 @@
     };
 
     function Controller() {
-        var that = this;
-
-        that.initCalendar = initCalendar;
-        that.select = select;
+        this.initCalendar = initCalendar;
+        this.select = select;
 
         function initCalendar(modelArgs, viewArgs) {
             caller = viewArgs.container = '#' + viewArgs.container;
@@ -42,7 +40,7 @@
                 viewDisplay: view.ViewDisplay.bind(view),
                 header: view.header,
                 selectable: view.isReadOnly,
-                select: that.select,
+                select: this.select.bind(model),
                 weekMode: view.weekMode,
                 dayRender: view.DayRender.bind(view)
             });
@@ -56,8 +54,8 @@
             if(true){//if (currentDate.getTime() >= options.start && currentDate.getTime() <= options.end.getTime() && currentEndDate.getTime() <= options.end.getTime()) {
 
                 var isWeekEnd;
-
-                while (currentDate.getTime() <= currentEndDate.getTime()) {
+model.initializeDefaultDayData(currentDate, currentEndDate);
+                //while (currentDate.getTime() <= currentEndDate.getTime()) {
 
                     //if (typeof modelDayData[currentDate] == 'undefined') {
 
@@ -68,10 +66,10 @@
                         //$.each(modelDay, weekEndWalker);
 
                     //}
-                    var newDate = currentDate.setDate(currentDate.getDate() + 1);
-                    currentDate = new Date(newDate);
+                    //var newDate = currentDate.setDate(currentDate.getDate() + 1);
+                    //currentDate = new Date(newDate);
 
-                }
+                //}
 
                 currentDate = new Date(start);;
 
