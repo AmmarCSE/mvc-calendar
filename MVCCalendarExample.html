@@ -8,8 +8,9 @@
     <script src='scripts/jquery.min.js'></script>
     <script src='scripts/jquery-ui.min.js'></script>
     <script src='scripts/fullcalendar.js'></script>
-    <script src='scripts/mvc-calendar.js'></script>
     <script src='scripts/calendar-controller.js'></script>
+    <script src='scripts/calendar-model.js'></script>
+    <script src='scripts/calendar-view.js'></script>
     <script>
         var calendars = [];
         var currentCalendar;
@@ -21,10 +22,16 @@
                 notWeekEnd: 2000
             }
         };
-        var displayElement = 'Rooms: {0}<br/>Free: {1}<br/>Pricing: {2}<br/></div>';
         var weekendDays = [4, 5, 6];
-        var calendar1, calendar2;
+        var calendar, calendar2;
         $(document).ready(function () {
+			$.ControllerRouter('initCalendar', 
+				{modelDay :modelDayAllotment,
+start: new Date(2013,11,3), end: new Date(2013,11,9)},
+			       	{container: 'calendar'});
+            $('#calendar').css({
+                "display": "none"
+            });
             $("#calendarDialog").dialog({
                 autoOpen: false,
                 show: {
@@ -41,32 +48,12 @@
                 buttons: {
                     "Done": function () {
 
-                        calendars[currentCalendar].updateDayData();
+                        //calendars[currentCalendar].updateDayData();
                         $(this).dialog("close");
                     }
                 }
             });
 
-            $("#roomQuantitySpinner").spinner();
-            $("#freeRoomQuantitySpinner").spinner();
-            $("#costSpinner").spinner();
-            //alert(displayElement.Format(1, 2, 3));
-            calendar1 = TASCalendar();
-            calendar1.initCalendar({
-                caller: 'calendar1',
-                start: new Date(2013, 11, 3),
-                end: new Date(2013, 11, 9),
-                modelDay: modelDayAllotment,
-                displayFormatElement: displayElement,
-
-                holidays: [new Date(2013, 0, 1).getTime(), new Date(2013, 10, 28).getTime()],
-                displayDefault: true
-            });
-            calendars['calendar1'] = calendar1;
-
-            $('#calendar1').css({
-                "display": "none"
-            });
         });
     </script>
     <style>
@@ -79,7 +66,7 @@
         td {
             height: 100px;
         }
-        #calendar1 {
+        #calendar {
             width: 600px;
             margin: 0 auto;
             margin-top: 40px;
@@ -99,9 +86,9 @@
 </head>
 
 <body>
-    <input type="image" id="calendarIcon" src="images/calendar_icon.jpg" onclick="$('#calendar1').show('slow');" />
+    <input type="image" id="calendarIcon" src="images/calendar_icon.jpg" onclick="$('#calendar').show('slow');" />
     <br/>
-    <div id='calendar1'></div>
+    <div id='calendar'></div>
     <br/>
     <div id="calendarDialog">
         <label for="roomQuantitySpinner">Room Quantity:</label>
