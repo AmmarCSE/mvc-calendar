@@ -27,7 +27,7 @@
         $(document).ready(function () {
 			$.ControllerRouter('initCalendar', 
 				{modelDay :modelDayAllotment,
-start: new Date(2013,11,3), end: new Date(2013,11,9)},
+start: new Date(2013,11,3), end: new Date(2013,11,9), initializeToDefault: true},
 			       	{container: 'calendar'});
             $('#calendar').css({
                 "display": "none"

@@ -54,7 +54,7 @@
             if(true){//if (currentDate.getTime() >= options.start && currentDate.getTime() <= options.end.getTime() && currentEndDate.getTime() <= options.end.getTime()) {
 
                 var isWeekEnd;
-model.initializeDefaultDayData(currentDate, currentEndDate);
+this.initializeDefaultDayData(currentDate, currentEndDate);
                 //while (currentDate.getTime() <= currentEndDate.getTime()) {
 
                     //if (typeof modelDayData[currentDate] == 'undefined') {

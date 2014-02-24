@@ -2,7 +2,7 @@ function CalendarModel () {
 	var args = arguments[0];
 
         this.modelDay = args.modelDay;
-	this.initializeToDefault = args.weekendDays || false; 
+	this.initializeToDefault = args.initializeToDefault || false; 
 
 	this.start = args.start;
 	this.end = args.end;
