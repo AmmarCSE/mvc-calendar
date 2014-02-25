@@ -128,8 +128,6 @@ $.fn.fullCalendar = function(options) {
 		this.each(function() {
 			var calendar = $.data(this, 'fullCalendar');
 
-			console.log(this);
-			console.log(calendar);
 			if (calendar && $.isFunction(calendar[options])) {
 				var r = calendar[options].apply(calendar, args);
 				if (res === undefined) {

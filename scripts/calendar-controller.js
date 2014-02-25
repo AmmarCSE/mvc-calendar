@@ -48,10 +48,10 @@
 
         function select(start, end, allDay) {
             //currentCalendar = options.caller;
-            currentDate = new Date(start);
-            currentEndDate = end;
+            var currentDate = new Date(start);
+            var currentEndDate = end;
 
-            if(true){//if (currentDate.getTime() >= options.start && currentDate.getTime() <= options.end.getTime() && currentEndDate.getTime() <= options.end.getTime()) {
+            if (currentDate.getTime() >= this.start && currentDate.getTime() <= this.end.getTime() && currentEndDate.getTime() <= this.end.getTime()) {
 
                 var isWeekEnd;
 this.initializeDefaultDayData(currentDate, currentEndDate);
@@ -70,10 +70,8 @@ this.initializeDefaultDayData(currentDate, currentEndDate);
                     //currentDate = new Date(newDate);
 
                 //}
-
-                currentDate = new Date(start);;
-
-                var formattedDate = $.fullCalendar.formatDate(currentDate, "Day Pricing: MMM dd");
+var dialogView = new DialogView(this, 'test');
+                var formattedDate = $.fullCalendar.formatDate(new Date(start), "Day Pricing: MMM dd");
                 //var isWeekEnd = modelDayData[currentDate].IsWeekEndDay;
 
                 //$('#roomQuantitySpinner').val(modelDay.NumberOfRooms);
@@ -106,11 +104,11 @@ this.initializeDefaultDayData(currentDate, currentEndDate);
 
                 }
 
-                $('#calendarDialog').dialog("option", "title", formattedDate);
-                $("#calendarDialog").dialog("open");
+                //dialogView.dialog("option", "title", formattedDate);
 
                 calendar.fullCalendar('unselect');
 
+                dialogView.DialogOpen();
             } else {
 
                 alert('Date selected out of range!');
