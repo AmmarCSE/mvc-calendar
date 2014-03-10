@@ -15,8 +15,14 @@ function CalendarView(model) {
  
 CalendarView.prototype.DayRender = function (daysOfWeek, cell) {
                      currentDate = daysOfWeek;
-                     var dayNumber = "<div class='fc-day-number'>" + currentDate.getDate() + "</div>";
                      var formattedDate = $.fullCalendar.formatDate(currentDate, "yyyy-MM-dd");
+
+                         $(this.container + ' td[data-date="' + formattedDate + '"] .fc-day-number')
+                             .remove();
+                         $(this.container + ' td[data-date="' + formattedDate + '"] .fc-event')
+                             .remove();
+                     var dayNumber = "<div class='fc-day-number'>" + currentDate.getDate() + "</div>";
+
                      if (currentDate.getTime() >= this.model.start.getTime() && currentDate.getTime() <= this.model.end.getTime()) {
                          $(this.container + ' ' + 'td[data-date="' + formattedDate + '"]')
                              .append(dayNumber);
@@ -56,6 +62,16 @@ CalendarView.prototype.DayRender = function (daysOfWeek, cell) {
                          $(this.container + ' ' + 'td[data-date="' + formattedDate + '"]')
                              .append(element);
                      }
+                 };
+
+CalendarView.prototype.DayReRender = function (startDate, endDate) {
+
+	var currentDate = startDate;
+             var numDaysSelected = dateDiffInDays(currentDate, endDate);
+             for (var i = 0; i < numDaysSelected; i++) {
+		     this.DayRender(currentDate, null);
+                 currentDate.setDate(currentDate.getDate() + 1);
+	     }
                  };
 
 CalendarView.prototype.ViewDisplay = function(view) {

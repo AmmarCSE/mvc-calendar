@@ -1,13 +1,15 @@
-function DialogView(model, start, end) {
+function DialogView(masterView, start, end) {
+this.model = masterView.model;	
     this.dialogContainer = $('<div></div>');
     this.labels = {
         NumberOfRooms: 'Number of Rooms:',
         NumberOfFreeRooms: 'Number of Free Rooms:',
         RoomCost: 'Room Cost:'
     };
-
-    BuildDialogInnards(this.dialogContainer, model, this.labels);
-    Dialogize(this.dialogContainer, start, end);
+this.startDate = start;
+this.endDate = end;
+    BuildDialogInnards(this.dialogContainer, this.model, this.labels);
+    Dialogize(this);
 
     function BuildDialogInnards(dialogContainer, model, labels) {
         var day = model.modelDay;
@@ -21,11 +23,10 @@ function DialogView(model, start, end) {
         }
     }
 
-    function Dialogize(dialogContainer, start, end) {
-        var formattedDate = $.fullCalendar.formatDate(new Date(start), "Day Pricing: MMM dd") +
-            (start.getTime() != end.getTime() ? $.fullCalendar.formatDate(end, " - dd") : '');
-
-        dialogContainer.dialog({
+    function Dialogize(dialogRef) {
+        var formattedDate = $.fullCalendar.formatDate(new Date(dialogRef.startDate), "Day Pricing: MMM dd") +
+            (dialogRef.startDate.getTime() != dialogRef.endDate.getTime() ? $.fullCalendar.formatDate(dialogRef.endDate, " - dd") : '');
+         dialogRef.dialogContainer.dialog({
             title: formattedDate,
             autoOpen: false,
             show: {
@@ -41,9 +42,7 @@ function DialogView(model, start, end) {
             modal: true,
             buttons: {
                 "Done": function () {
-
-                    //calendars[currentCalendar].updateDayData();
-                    $(this).dialog("close");
+$.ControllerRouter('modelDayDialogClose', masterView.model, dialogRef, masterView);
                 }
             }
         });
@@ -52,4 +51,8 @@ function DialogView(model, start, end) {
 
 DialogView.prototype.DialogOpen = function () {
     this.dialogContainer.dialog("open");
+}
+DialogView.prototype.DialogClose = function () {
+    this.dialogContainer.dialog("close");
+this.dialogContainer.dialog('destroy').remove();
 }

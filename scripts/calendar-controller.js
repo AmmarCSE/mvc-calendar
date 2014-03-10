@@ -23,22 +23,24 @@
     function Controller() {
         this.initCalendar = initCalendar;
         this.select = select;
+        this.modelDayDialogClose = modelDayDialogClose;
 
         function initCalendar(modelArgs, viewArgs) {
             caller = viewArgs.container = '#' + viewArgs.container;
+
             var model = new CalendarModel(modelArgs);
             var view = new CalendarView(model, viewArgs);
-            //currentStartDate = options.start;
+
             calendar = $(caller).fullCalendar({
-                theme: view.useTheme,
-                defaultView: view.displayMode,
                 year: model.start.getFullYear(),
                 month: model.start.getMonth(),
                 date: model.start.getDate(),
+                select: this.select.bind(view),
+                theme: view.useTheme,
+                defaultView: view.displayMode,
                 viewDisplay: view.ViewDisplay.bind(view),
                 header: view.header,
                 selectable: view.isReadOnly,
-                select: this.select.bind(model),
                 weekMode: view.weekMode,
                 dayRender: view.DayRender.bind(view)
             });
@@ -48,16 +50,23 @@
             var currentDate = new Date(start);
             var currentEndDate = end;
 
-            if (currentDate.getTime() >= this.start && currentDate.getTime() <= this.end.getTime() && currentEndDate.getTime() <= this.end.getTime()) {
-                this.initializeDefaultDayData(currentDate, currentEndDate);
+            if (currentDate.getTime() >= this.model.start && currentDate.getTime() <= this.model.end.getTime() && currentEndDate.getTime() <= this.model.end.getTime()) {
+		    console.log(this.model.modelDayData);
+                //this.model.initializeDefaultDayData(currentDate, currentEndDate);
 
                 var dialogView = new DialogView(this, start, end);
                 dialogView.DialogOpen();
 
-                calendar.fullCalendar('unselect');
+                //calendar.fullCalendar('unselect');
             } else {
                 alert('Date selected out of range!');
             }
+        }
+	function modelDayDialogClose(model, dialogview, masterView) {
+
+                    model.updateDayData(dialogview.startDate, dialogview.endDate);
+		    dialogview.DialogClose();
+		    masterView.DayReRender(dialogview.startDate, dialogview.endDate);
         }
     }
 })(jQuery);

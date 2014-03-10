@@ -67,63 +67,63 @@ CalendarModel.prototype.loadDayData = function(data) {
 };
 
 
-CalendarModel.prototype.updateDayWalker = function (key, value) {
+CalendarModel.prototype.updateDayWalker = function (key, value, currentDate) {
          if (key !== 'weekend') {
-
              this.modelDayData[currentDate][key] = $("[data-dayModelKey='" + key + "']").val() === undefined ?
 
              value : $("[data-dayModelKey='" + key + "']").val();
 
          }
 };
-CalendarModel.prototype.updateDayData = function () {
-             var numDaysSelected = dateDiffInDays(currentDate, currentEndDate);
+CalendarModel.prototype.updateDayData = function (startDate, endDate) {
+	var currentDate = new Date(startDate);
+             var numDaysSelected = dateDiffInDays(currentDate, endDate);
 
-             var formattedDate;
-             var eventContainer;
+             //var formattedDate;
+             //var eventContainer;
 
              for (var i = 0; i < numDaysSelected; i++) {
-                 changed.push(currentDate.getTime());
+                 //changed.push(currentDate.getTime());
 
-                 formattedDate = $.fullCalendar.formatDate(currentDate, "yyyy-MM-dd");
-                 eventContainer = $(caller + ' td[data-date="' + formattedDate + '"]');
+                 //formattedDate = $.fullCalendar.formatDate(currentDate, "yyyy-MM-dd");
+                 //eventContainer = $(caller + ' td[data-date="' + formattedDate + '"]');
 
-                 eventContainer.children('.fc-event').remove();
+                 //eventContainer.children('.fc-event').remove();
 
-                 var numRooms = $('#roomQuantitySpinner').val();
-                 var freeRooms = $('#freeRoomQuantitySpinner').val();
-                 var pricing = $('#costSpinner').val();
+                 //var numRooms = $('#roomQuantitySpinner').val();
+                 //var freeRooms = $('#freeRoomQuantitySpinner').val();
+                 //var pricing = $('#costSpinner').val();
 
-                 $.each(this.modelDayData[currentDate], updateDayWalker);
+                 $.each(this.modelDayData[currentDate], (function(key, value) {
+			 this.updateDayWalker(key, value, currentDate)}).bind(this));
+		 console.log(this.modelDayData);
+                 //var isWeekEnd = false;
 
-                 var isWeekEnd = false;
+                 //var cell = $(caller + ' .fc-day[data-date="' + formattedDate + '"]');
+                 //cell.removeClass('fc-state-highlight-weekend');
 
-                 var cell = $(caller + ' .fc-day[data-date="' + formattedDate + '"]');
-                 cell.removeClass('fc-state-highlight-weekend');
+                 //if ($('#isWeekEnd').is(':checked')) {
+                     //cell.addClass('fc-state-highlight-weekend');
+                     //isWeekEnd = true;
+                 //}
 
-                 if ($('#isWeekEnd').is(':checked')) {
-                     cell.addClass('fc-state-highlight-weekend');
-                     isWeekEnd = true;
-                 }
-
-                 var isHoliday = jQuery.inArray(currentDate.getTime(), holidays) != -1;
-                 if (isHoliday)
-                     cell.addClass('fc-state-highlight-holiday');
+                 //var isHoliday = jQuery.inArray(currentDate.getTime(), holidays) != -1;
+                 //if (isHoliday)
+                     //cell.addClass('fc-state-highlight-holiday');
 
 
-                 this.modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
+                 //this.modelDayData[currentDate].IsWeekEndDay = isWeekEnd;
 
-                 var element = '<div class="fc-event">' +
-                     'Rooms: ' + numRooms + '<br/>' +
-                     'Free: ' + freeRooms + '<br/>' +
-                     'Pricing: ' + pricing + '<br/>' +
-                     'Total: ' + pricing * numRooms +
-                     '</div>';
-                 eventContainer.append(element);
+                 //var element = '<div class="fc-event">' +
+                     //'Rooms: ' + numRooms + '<br/>' +
+                     //'Free: ' + freeRooms + '<br/>' +
+                     //'Pricing: ' + pricing + '<br/>' +
+                     //'Total: ' + pricing * numRooms +
+                     //'</div>';
+                 //eventContainer.append(element);
 
                  currentDate.setDate(currentDate.getDate() + 1);
              }
-             calendar.fullCalendar('unselect');
 };
 
 CalendarModel.prototype.retrieveData = function () {
