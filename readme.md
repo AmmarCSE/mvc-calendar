@@ -2,8 +2,8 @@
 
 MVCCalendar - Model-View-Controller FullCalendar
 ====================================================
-
-MVCCalndar is based on the FullCalendar jQuery plugin which extends it with
+![alt tag](https://raw.github.com/AmmarCSE/mvc-calendar/screenshot.png)
+MVCCalendar is based on the FullCalendar jQuery plugin and extends it with
 MVC capabilities. You can now attach a model to each day in your calendar and
 provide different views allowing users model editing capabilities.
 
