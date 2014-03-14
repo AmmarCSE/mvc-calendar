@@ -1,13 +1,13 @@
 function DialogView(masterView, start, end) {
-this.model = masterView.model;	
+    this.model = masterView.model;
     this.dialogContainer = $('<div></div>');
     this.labels = {
         NumberOfRooms: 'Number of Rooms:',
         NumberOfFreeRooms: 'Number of Free Rooms:',
         RoomCost: 'Room Cost:'
     };
-this.startDate = start;
-this.endDate = end;
+    this.startDate = start;
+    this.endDate = end;
     BuildDialogInnards(this.dialogContainer, this.model, this.labels);
     Dialogize(this);
 
@@ -26,7 +26,7 @@ this.endDate = end;
     function Dialogize(dialogRef) {
         var formattedDate = $.fullCalendar.formatDate(new Date(dialogRef.startDate), "Day Pricing: MMM dd") +
             (dialogRef.startDate.getTime() != dialogRef.endDate.getTime() ? $.fullCalendar.formatDate(dialogRef.endDate, " - dd") : '');
-         dialogRef.dialogContainer.dialog({
+        dialogRef.dialogContainer.dialog({
             title: formattedDate,
             autoOpen: false,
             show: {
@@ -42,7 +42,7 @@ this.endDate = end;
             modal: true,
             buttons: {
                 "Done": function () {
-$.ControllerRouter('modelDayDialogClose', masterView.model, dialogRef, masterView);
+                    $.ControllerRouter('modelDayDialogClose', masterView.model, dialogRef, masterView);
                 }
             }
         });
@@ -54,5 +54,5 @@ DialogView.prototype.DialogOpen = function () {
 }
 DialogView.prototype.DialogClose = function () {
     this.dialogContainer.dialog("close");
-this.dialogContainer.dialog('destroy').remove();
+    this.dialogContainer.dialog('destroy').remove();
 }

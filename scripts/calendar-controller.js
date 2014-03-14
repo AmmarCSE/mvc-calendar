@@ -51,22 +51,18 @@
             var currentEndDate = end;
 
             if (currentDate.getTime() >= this.model.start && currentDate.getTime() <= this.model.end.getTime() && currentEndDate.getTime() <= this.model.end.getTime()) {
-		    console.log(this.model.modelDayData);
-                //this.model.initializeDefaultDayData(currentDate, currentEndDate);
-
                 var dialogView = new DialogView(this, start, end);
                 dialogView.DialogOpen();
-
-                //calendar.fullCalendar('unselect');
             } else {
                 alert('Date selected out of range!');
             }
         }
-	function modelDayDialogClose(model, dialogview, masterView) {
 
-                    model.updateDayData(dialogview.startDate, dialogview.endDate);
-		    dialogview.DialogClose();
-		    masterView.DayReRender(dialogview.startDate, dialogview.endDate);
+        function modelDayDialogClose(model, dialogview, masterView) {
+
+            model.updateDayData(dialogview.startDate, dialogview.endDate);
+            dialogview.DialogClose();
+            masterView.DayReRender(dialogview.startDate, dialogview.endDate);
         }
     }
 })(jQuery);
